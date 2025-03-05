@@ -1,4 +1,4 @@
-# Automatic restic Backups using Native OS Task Schedulers
+# Automatic Restic Backups Using Native OS Task Schedulers
 *formerly named restic-systemd-automatic-backup*
 
 [![GitHub Stars](https://img.shields.io/github/stars/erikw/restic-automatic-backup-scheduler?style=social)](#)
@@ -14,7 +14,7 @@
 [![Closed PRs](https://img.shields.io/github/issues-pr-closed/erikw/restic-automatic-backup-scheduler?color=success)](https://github.com/erikw/restic-automatic-backup-scheduler/pulls?q=is%3Apr+is%3Aclosed)
 [![License](https://img.shields.io/badge/license-BSD--3-blue)](LICENSE)
 [![OSS Lifecycle](https://img.shields.io/osslifecycle/erikw/restic-automatic-backup-scheduler)](https://github.com/Netflix/osstracker)
-[![SLOC](https://img.shields.io/tokei/lines/github/erikw/restic-automatic-backup-scheduler?logo=codefactor&logoColor=lightgrey)](#)
+[![SLOC](https://sloc.xyz/github/erikw/restic-automatic-backup-scheduler?lower=true)](#)
 [![Top programming languages used](https://img.shields.io/github/languages/top/erikw/restic-automatic-backup-scheduler)](#)
 <br>
 
@@ -22,6 +22,11 @@
 <a href = "https://github.com/erikw/restic-automatic-backup-scheduler/graphs/contributors">
 <img src = "https://contrib.rocks/image?repo=erikw/restic-automatic-backup-scheduler&max=24"/>
 </a>
+
+<p align="center">
+    <!-- Ref: https://dev.to/azure/adding-a-github-codespace-button-to-your-readme-5f6l -->
+    <a href="https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=129436975" title="Open in GitHub Codespaces" ><img alt="Open in GitHub Codespaces" src="https://github.com/codespaces/badge.svg"></a>
+</p>
 
 # Intro
 [restic](https://restic.net/) is a command-line tool for making backups, the right way. Check the official website for a feature explanation. As a storage backend, I recommend [Backblaze B2](https://www.backblaze.com/b2/cloud-storage.html) as restic works well with it, and it is (at the time of writing) very affordable for the hobbyist hacker! (anecdotal: I pay for my full-systems backups each month typically < 1 USD).
@@ -33,7 +38,7 @@ Here follows a step-by step tutorial on how to set it up, with my sample script 
 Note, you can use any restic's supported [storage backends](https://restic.readthedocs.io/en/latest/030_preparing_a_new_repo.html). The setup should be similar, but you will have to use other configuration variables to match your backend of choice.
 
 ## Project Scope
-**Update:** this project is feature complete (see reasoning below). Only bug fixes wull be accepted. Feel free to fork if you want to add more features; forking vase was the initial scope of this project!
+**Update:** this project is feature complete (see reasoning below). Only bug fixes will be accepted. Feel free to fork if you want to add more features; being a forking base was the initial scope of this project!
 
 The scope for this is not to be a full-fledged super solution that solves all the problems and all possible setups. The aim is to be a hackable code base for you to start sewing up the perfect backup solution that fits your requirements!
 
@@ -43,7 +48,7 @@ To use a different storage backend than B2, you should only need to tweak a few 
 
 ## Notes
 * Tip: Navigate this document easily from the Section icon in the top left corner.
-   ![README Sections](img/readme_sections.png)
+<img src="img/readme_sections.png" alt="README.md sections" width="30%" />
 * ☝ **Note**: in the command listing in this document, `$` means a user shell and `#` means a root shell (or use `sudo`).
 
 
@@ -139,6 +144,7 @@ Many Linux distributions nowadays use [Systemd](https://en.wikipedia.org/wiki/Sy
    ```
 1. Configure [how often](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/ScheduledJobs.html#//apple_ref/doc/uid/10000172i-CH1-SW1) backups should be done. If needed, edit `OnCalendar` in
    * Homebrew install: `~/Library/LaunchAgents/homebrew.mxcl.restic-automatic-backup-scheduler.plist`.
+     * Note that with Homebrew install, this file will only be available after running the `$ brew services start [...]` command in the next step. Run that command and come back here.
    * `make` install: `~/Library/LaunchAgents/com.github.erikw.restic-backup.plist`.
 1. Enable automated backup for starting with the system & make the first backup:
    * Homebrew install:
@@ -592,13 +598,13 @@ $ tail -f /tmp/restic-automatic-backup-scheduler.log # or follow output like thi
   ```
 
 # Releasing
-To make a new release:
-1. Create a new tag:
-   ```console
-   $ vi CHANGELOG.md && git commit -am "Update CHANGELOG.md"
-   $ git tag vX.Y.Z
-   $ git push && git push --tags
-   ```
+1. Create a new version of this project by using [semver-cli](https://github.com/maykonlsf/semver-cli).
+	```shell
+	vi CHANGELOG.md
+	semver up minor
+	ver=$(semver get release)
+	git commit -am "Bump version to $ver" && git tag $ver && git push --atomic origin main $ver
+	```
 1. Update version in the AUR [PKGBUILD](https://aur.archlinux.org/packages/restic-automatic-backup-scheduler/)
 1. Update version in the Homebrew Formulas (see the repo README):
    * [restic-automatic-backup-scheduler](https://github.com/erikw/homebrew-tap/blob/main/Formula/restic-automatic-backup-scheduler.rb)
